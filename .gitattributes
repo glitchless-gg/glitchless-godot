@@ -1,0 +1,5 @@
+# The Godot Asset Library installs this repository's zip: only addons/ goes in it.
+/README.md export-ignore
+/LICENSE export-ignore
+/.gitattributes export-ignore
+/.gitignore export-ignore
