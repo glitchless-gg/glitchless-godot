@@ -373,8 +373,10 @@ A web export (Godot 4.5 or later, the Compatibility renderer) sends everything a
 - **Requests are `text/plain`**, as the browser SDK's are, so a batch needs no CORS preflight. The server reads the JSON whatever the type says.
 - **`user://` is the browser's IndexedDB.** The outbox, the player ID (install and full mode) and the player's off switch are kept there per site, so a player who turned Glitchless off stays off on their next visit, and batches a visit couldn't send go on the next.
 - **Debug builds** send from a page anywhere but your own machine; see [Off in debug builds](#off-in-debug-builds).
+- **The page is read without `eval`** (property by property, through `JavaScriptBridge.get_interface`), so a page whose Content-Security-Policy refuses `eval` still names the browser.
+- **In a Reddit post** (Devvit Web) the game sends to its app's own server, which relays to Glitchless: pass the path, `Glitchless.init("my-game", "1.0", "prod", "/api/glitchless")`, and Glitchless puts it on the page's origin. There what goes as the page is hidden or closed is sent by the page's own `fetch` with keepalive instead of a beacon, since only the page's fetches carry the app's token. The app's server side (`glitchless/devvit`, `devvit.json`) is in the instrument skill's Reddit steps and [SPEC §5g](https://github.com/glitchless-gg/glitchless/blob/main/docs/SPEC.md#5g-games-in-a-reddit-post-devvit-web). Godot's export page has an inline script; if the post's policy refuses it, move it into a `.js` file next to the page.
 
-`npm run test:godot:web` plays the demo as a web export in Chromium, with thread support off and on, and checks the above; [Limits](#limits) lists what it doesn't.
+`npm run test:godot:web` plays the demo as a web export in Chromium, with thread support off and on, and in a Reddit-like page, and checks the above; [Limits](#limits) lists what it doesn't.
 
 ## What it costs
 
@@ -393,7 +395,7 @@ It isn't a profiler: it hooks no functions and runs no engine profiler. Each fra
 
 ## What goes on the wire
 
-`POST {intake}/v1/intake?token=…` with the browser SDK's envelope and `sdk: "glitchless-godot/0.6.6"`. Event types and core fields are the same; see [docs/SPEC.md](https://github.com/glitchless-gg/glitchless/blob/main/docs/SPEC.md#5-godot-sdk) for what the Godot SDK adds. The browser fields it can't fill (`geometries`, `textures`, `programs`, `page`, `loaf`) are sent as null or empty.
+`POST {intake}/v1/intake?token=…` with the browser SDK's envelope and `sdk: "glitchless-godot/0.6.7"`. Event types and core fields are the same; see [docs/SPEC.md](https://github.com/glitchless-gg/glitchless/blob/main/docs/SPEC.md#5-godot-sdk) for what the Godot SDK adds. The browser fields it can't fill (`geometries`, `textures`, `programs`, `page`, `loaf`) are sent as null or empty.
 
 ## Limits
 

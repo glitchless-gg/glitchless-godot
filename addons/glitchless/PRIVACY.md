@@ -41,7 +41,7 @@ The Glitchless server does not read or store the address a request came from. Th
 
 ## Field by field
 
-Every batch sends the envelope: `service`, `env`, `version` (the game's), `session_id`, `player_id` (null in anonymous mode, the saved player ID in install and full mode), `sdk` (`glitchless-godot/0.6.6`) and `batch_id` (random, made for each batch and sent again with its retries).
+Every batch sends the envelope: `service`, `env`, `version` (the game's), `session_id`, `player_id` (null in anonymous mode, the saved player ID in install and full mode), `sdk` (`glitchless-godot/0.6.7`) and `batch_id` (random, made for each batch and sent again with its retries).
 
 Every event has `type`, `ts` (when it happened, in milliseconds, UTC) and `level` (the game's own level name, or null). While the game has set them, every event and window also carries `zone` (where the player is in an open world, in the game's words) and `match`, `party` or `run` (the [group](#groups) IDs).
 
@@ -149,6 +149,8 @@ The form tells players what it sends ("your note, the screenshot and where you a
 | `user://glitchless/enabled` | `on` or `off`: the player's choice from the game's "Share performance data" setting (`Glitchless.set_enabled`), so a player who turned it off has nothing measured or sent from the first frame of every later launch. The same on every device that made the same choice, so it ties nothing to anyone. Written only once the game calls `set_enabled` | all, and a dedicated server |
 
 In a web export these live in the browser's storage for the game's site (IndexedDB), with the same contents. Deleting the app, or clearing the site's data in a web export, deletes them all. While the choice is `off`, nothing else is written: the outbox is deleted, unread, and no new one is kept.
+
+In a Reddit post (Devvit Web) a web export sends through its app's own server, whose relay (`glitchless/devvit`) makes every session anonymous whatever mode the game set: it drops the player ID, adds the subreddit and post as session properties, replaces the playing redditor's username and IDs with `<redditor>` in the game's text, and never forwards Reddit's headers (`docs/SPEC.md` §5g, and the browser SDK's PRIVACY.md has a paragraph for the game's privacy policy). Reddit clears a post's browser storage with each app version, so the files above last until the game's next update there.
 
 ## Kept on the server
 
