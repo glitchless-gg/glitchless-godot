@@ -56,7 +56,7 @@ extends Node
 # that the two branches differ in type, which is the point, so that warning is off for this file.
 @warning_ignore_start("incompatible_ternary")
 
-const SDK_VERSION := "0.6.7"
+const SDK_VERSION := "0.6.8"
 const SDK := "glitchless-godot/" + SDK_VERSION
 
 const Sketch := preload("sketch.gd")
@@ -2134,7 +2134,7 @@ func _session_start_event() -> Dictionary:
 		"session_type": _session_type,
 		"privacy": _privacy,
 		"device": device,
-		"page": null,
+		"page": WebPage.address(),  # a web export's page, where it was played (web_page.gd); null elsewhere
 		"nav_ms": null,
 	}
 	if OS.has_feature("web"):
